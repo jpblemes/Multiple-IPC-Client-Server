@@ -32,4 +32,4 @@ clean: $(SUBCLEAN)
 $(SUBCLEAN): %.clean:
 	$(MAKE) -C $* clean
 	$(RM_DIR) $(BUILD_DIR) $(SHARED_DIR)
-	${RM} *.o *.d
+	${RM} *.o *.d *.txt
