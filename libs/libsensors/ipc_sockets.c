@@ -37,7 +37,6 @@ int server(void)
     int ret;
     int connection_socket;
     int data_socket;
-    int data;
     char buffer[BUFFER_SIZE];
     char cmd[CMD_SIZE];
 
@@ -129,7 +128,13 @@ int server(void)
         DBG_PRINT("Write data on file\n");
         memset(cmd, 0, CMD_SIZE);
         snprintf(cmd, sizeof(cmd), "echo %s > data.txt", buffer);
-        system(cmd);
+        ret = system(cmd);
+
+        if(ret != RESULT_SUCCESS)
+        {
+            perror("system");
+            return RESULT_FAIL;
+        }
 
         /* Send ok. */
         memset(buffer, 0, BUFFER_SIZE);
@@ -160,7 +165,6 @@ int server(void)
 int client (int value)
 {
     struct sockaddr_un addr;
-    int i;
     int ret;
     int data_socket;
     char buffer[BUFFER_SIZE];
