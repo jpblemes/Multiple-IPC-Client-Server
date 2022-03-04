@@ -1,5 +1,5 @@
 PWD = $(shell pwd)
-SHARED_DIR = $(PWD)/../shared
+SHARED_DIR = $(PWD)/../../shared
 CC = gcc  # C compiler
 CFLAGS = -fPIC -Wall -Wextra -O2 -g  # C flags
 LDFLAGS = -shared -pthread# linking flags
