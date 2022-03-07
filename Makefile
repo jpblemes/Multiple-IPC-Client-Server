@@ -21,9 +21,6 @@ dir:
 	$(shell mkdir $(BUILD_DIR))
 	$(shell mkdir $(SHARED_DIR))
 
-path:
-	$(shell LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(SHARED_DIR))
-
 $(LIBS):
 	$(MAKE) -C $@
 
