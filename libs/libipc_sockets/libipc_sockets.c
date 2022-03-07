@@ -6,7 +6,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-#include "ipc_sockets.h"
+#include "libipc_sockets.h"
 
 #undef DEBUG
 #define DEBUG

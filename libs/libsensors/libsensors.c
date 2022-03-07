@@ -6,7 +6,7 @@
 #include <time.h>
 
 #include "libsensors.h"
-#include "ipc_sockets.h"
+#include "../libipc_sockets/libipc_sockets.h"
 
 #undef DEBUG
 #define DEBUG
@@ -17,12 +17,10 @@
     #define DBG_PRINT(fmt, ...)
 #endif // DEBUG
 
-#define RESULT_SUCCESS  0
-#define RESULT_FAIL    -1
-
 //Function that starts server
 int dataServer_start(void)
 {
+    selectIPC();
     if( RESULT_SUCCESS != server() ){
         DBG_PRINT("server failed\n");
     }
@@ -33,6 +31,7 @@ int dataServer_start(void)
 //Function for client command
 int dataClient_sendCommand(void)
 {   
+    selectIPC();
     srand(time(NULL));
     int lower = 1, upper = 10000;
     int num = (rand() % (upper - lower + 1)) + lower;

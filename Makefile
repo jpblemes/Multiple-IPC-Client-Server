@@ -2,9 +2,16 @@ PWD = $(shell pwd)
 BUILD_DIR = $(PWD)/build
 SHARED_DIR = $(PWD)/shared
 #SUBDIRS = $(wildcard */.)
-LIBS = libs/libsensors
-APPS = apps/testServer apps/testClient
+
+#Include libs
+LIBS += libs/libipc_sockets
+LIBS += libs/libsensors
+#Include apps
+APPS += apps/testServer
+APPS += apps/testClient
+
 ALL_DIRS = $(LIBS) $(APPS)
+
 RM = rm -f   # rm command
 RM_DIR = rm -rf# rm a filled dir command
 
