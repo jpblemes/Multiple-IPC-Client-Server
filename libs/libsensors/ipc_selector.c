@@ -40,22 +40,22 @@ int selectIPC(int ipc_option)
     }
 
     if(ipc_selected.id == RESULT_FAIL) {
-        DBG_PRINT("Invalid ipc method\n");
+        DBG_PRINT("Invalid ipc method\n")
         return RESULT_FAIL;
     }
 
-    DBG_PRINT("IPC selected: id=[%d] name=[%s] path=[%s]\n", ipc_selected.id, ipc_selected.name, ipc_selected.path);
+    DBG_PRINT("IPC selected: id=[%d] name=[%s] path=[%s]\n", ipc_selected.id, ipc_selected.name, ipc_selected.path)
     if(handle != NULL)
     {
-        DBG_PRINT("Handle already loaded\n");
+        DBG_PRINT("Handle already loaded\n")
         return RESULT_SUCCESS;
     }
 
-    DBG_PRINT("Loading handler\n");
+    DBG_PRINT("Loading handler\n")
     handle = dlopen(ipc_selected.path, RTLD_NOW | RTLD_GLOBAL);
 
     if (!handle) {
-        DBG_PRINT("%s\n", dlerror());
+        DBG_PRINT("%s\n", dlerror())
         return RESULT_FAIL;
     }
 
@@ -67,14 +67,14 @@ int selectIPC(int ipc_option)
 int server(void)
 {
     if(handle == NULL){
-        DBG_PRINT("handle == NULL!\n");
+        DBG_PRINT("handle == NULL!\n")
         return RESULT_FAIL;
     }
 
     int (*select_server)(void);
     select_server = dlsym(handle, "server");
     if (select_server == NULL) {
-        DBG_PRINT("Error: %s\n", dlerror()); /* no such symbol */
+        DBG_PRINT("Error: %s\n", dlerror()) /* no such symbol */
         return RESULT_FAIL;
     }
 
@@ -87,14 +87,14 @@ int server(void)
 int client(int value)
 {
     if(handle == NULL){
-        DBG_PRINT("handle == NULL!\n");
+        DBG_PRINT("handle == NULL!\n")
         return RESULT_FAIL;
     }
 
     int (*select_client)(int);
     select_client = dlsym(handle, "client");
     if (select_client == NULL) {
-        DBG_PRINT("Error: %s\n", dlerror()); /* no such symbol */
+        DBG_PRINT("Error: %s\n", dlerror()) /* no such symbol */
         return RESULT_FAIL;
     }
 

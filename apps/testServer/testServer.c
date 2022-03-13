@@ -18,22 +18,22 @@ int main(int argc, char** argv)
     int ipc_option;
 
     if(argc <= 1){
-        DBG_PRINT("Please provide a value for the IPC\n");
-        DBG_PRINT("Example:\n");
-        DBG_PRINT("./testServer 0 &\n");
-        DBG_PRINT("./testClient 0\n");
+        DBG_PRINT("Please provide a value for the IPC\n")
+        DBG_PRINT("Example:\n")
+        DBG_PRINT("./testServer 0 &\n")
+        DBG_PRINT("./testClient 0\n")
         return 0;
     }
 
     ipc_option = atoi(argv[1]);
 
     if( libsensors_start(ipc_option) == RESULT_FAIL ) {
-        DBG_PRINT("libsensors_start failed!\n");
+        DBG_PRINT("libsensors_start failed!\n")
         return 0;
     }
 
     if( libsensors_serverStart() == RESULT_FAIL) {
-        DBG_PRINT("libsensors_serverStart failed!\n");
+        DBG_PRINT("libsensors_serverStart failed!\n")
     }
 
     return 0;

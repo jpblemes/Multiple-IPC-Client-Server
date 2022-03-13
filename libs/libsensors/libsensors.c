@@ -22,7 +22,7 @@ static int libsensors_init = 0;
 int libsensors_start(int ipc_option)
 {
     if(selectIPC(ipc_option) == RESULT_FAIL) {
-        DBG_PRINT("Failed to load IPC lib.\n");
+        DBG_PRINT("Failed to load IPC lib.\n")
         return RESULT_FAIL;
     }
     libsensors_init = 1;
@@ -34,12 +34,12 @@ int libsensors_start(int ipc_option)
 int libsensors_serverStart(void)
 {
     if(!libsensors_init){
-        DBG_PRINT("libsensors not started!\n");
+        DBG_PRINT("libsensors not started!\n")
         return RESULT_FAIL;
     }
 
     if( RESULT_SUCCESS != server() ){
-        DBG_PRINT("server failed\n");
+        DBG_PRINT("server failed\n")
     }
 
     return RESULT_SUCCESS;
@@ -49,12 +49,12 @@ int libsensors_serverStart(void)
 int libsensors_clientSendValue(int num)
 {
     if(!libsensors_init){
-        DBG_PRINT("libsensors not started!\n");
+        DBG_PRINT("libsensors not started!\n")
         return RESULT_FAIL;
     }
 
     if( RESULT_SUCCESS != client(num) ){
-        DBG_PRINT("client failed\n");
+        DBG_PRINT("client failed\n")
     }
 
     return RESULT_SUCCESS;

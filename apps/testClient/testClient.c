@@ -22,26 +22,26 @@ int main(int argc, char** argv)
     int ipc_option, num;
 
     if( argc <= 1 ){
-        DBG_PRINT("Please provide a value for the IPC\n");
-        DBG_PRINT("Example:\n");
-        DBG_PRINT("./testServer 0 &\n");
-        DBG_PRINT("./testClient 0\n");
+        DBG_PRINT("Please provide a value for the IPC\n")
+        DBG_PRINT("Example:\n")
+        DBG_PRINT("./testServer 0 &\n")
+        DBG_PRINT("./testClient 0\n")
         return 0;
     }
 
     ipc_option = atoi(argv[1]);
 
     if( libsensors_start(ipc_option) == RESULT_FAIL ) {
-        DBG_PRINT("libsensors_start failed!\n");
+        DBG_PRINT("libsensors_start failed!\n")
         return 0;
     }
 
     srand(time(NULL));
     num = (rand() % (UPPER - LOWER + 1)) + LOWER;
-    DBG_PRINT("Random number generated: %d\n", num);
+    DBG_PRINT("Random number generated: %d\n", num)
 
     if( libsensors_clientSendValue(num) == RESULT_FAIL) {
-        DBG_PRINT("libsensors_clientSendValue failed!\n");
+        DBG_PRINT("libsensors_clientSendValue failed!\n")
     }
 
     return 0;

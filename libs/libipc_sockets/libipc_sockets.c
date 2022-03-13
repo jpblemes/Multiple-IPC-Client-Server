@@ -40,7 +40,7 @@ int server(void)
     char buffer[BUFFER_SIZE];
     char cmd[CMD_SIZE];
 
-    DBG_PRINT("Started IPC Socket Server!\n");
+    DBG_PRINT("Started IPC Socket Server!\n")
 
     /*In case the program exited inadvertently on the last run,
      *remove the socket.
@@ -58,7 +58,7 @@ int server(void)
         return RESULT_FAIL;
     }
     
-    DBG_PRINT("Master socket created\n");
+    DBG_PRINT("Master socket created\n")
 
     /*initialize*/
     memset(&name, 0, sizeof(struct sockaddr_un));
@@ -80,7 +80,7 @@ int server(void)
         return RESULT_FAIL;
     }
 
-    DBG_PRINT("bind() call succeed\n");
+    DBG_PRINT("bind() call succeed\n")
     /*
      * Prepare for accepting connections. The backlog size is set
      * to 20. So while one request is being processed other requests
@@ -97,7 +97,7 @@ int server(void)
     for (;;) {
 
         /* Wait for incoming connection. */
-        DBG_PRINT("Waiting on accept() sys call\n");
+        DBG_PRINT("Waiting on accept() sys call\n")
 
         data_socket = accept(connection_socket, NULL, NULL);
 
@@ -106,7 +106,7 @@ int server(void)
             return RESULT_FAIL;
         }
         
-        DBG_PRINT("Connection accepted from client\n");
+        DBG_PRINT("Connection accepted from client\n")
 
         /*Prepare the buffer to recv the data*/
         memset(buffer, 0, BUFFER_SIZE);
@@ -114,7 +114,7 @@ int server(void)
         /* Wait for next data packet. */
         /*Server is blocked here. Waiting for the data to arrive from client
             * 'read' is a blocking system call*/
-        DBG_PRINT("Waiting for data from the client\n");
+        DBG_PRINT("Waiting for data from the client\n")
         ret = read(data_socket, buffer, BUFFER_SIZE);
 
         if (ret == -1) {
@@ -123,9 +123,9 @@ int server(void)
         }
 
         /* show received value. */
-        DBG_PRINT("data received by server: %s\n", buffer);
+        DBG_PRINT("data received by server: %s\n", buffer)
 
-        DBG_PRINT("Write data on file\n");
+        DBG_PRINT("Write data on file\n")
         memset(cmd, 0, CMD_SIZE);
         snprintf(cmd, sizeof(cmd), "echo %s > data.txt", buffer);
         ret = system(cmd);
@@ -207,7 +207,7 @@ int client (int value)
     if (ret == -1) {
         perror("write");
     }
-    DBG_PRINT("Data sent to server: %d\n", value);
+    DBG_PRINT("Data sent to server: %d\n", value)
 
     /* Receive result. */
     memset(buffer, 0, BUFFER_SIZE);
@@ -222,7 +222,7 @@ int client (int value)
 
     buffer[BUFFER_SIZE - 1] = 0;
 
-    DBG_PRINT("Result = %s\n", buffer);
+    DBG_PRINT("Result = %s\n", buffer)
 
     /* Close socket. */
 
