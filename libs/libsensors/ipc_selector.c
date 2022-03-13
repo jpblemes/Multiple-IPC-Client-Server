@@ -5,7 +5,7 @@
 #include "ipc_selector.h"
 
 #undef DEBUG
-#define DEBUG
+//#define DEBUG /*uncomment to debug*/
 
 #ifdef DEBUG
     #define DBG_PRINT(fmt, ...) printf("%s %s Line:%d: " fmt, __FILE__, __func__, __LINE__, ## __VA_ARGS__);
