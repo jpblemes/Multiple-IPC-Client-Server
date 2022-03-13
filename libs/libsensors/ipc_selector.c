@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <dlfcn.h> //dlopen and dlsym
 
-#include "libsensors.h"
+#include "ipc_selector.h"
 
 #undef DEBUG
 #define DEBUG
@@ -13,21 +13,46 @@
     #define DBG_PRINT(fmt, ...)
 #endif // DEBUG
 
-//Dynamic open the chosen lib
-#define LIBIPC_SOCKETS_PATH "shared/libipc_sockets.so"
-
 static void *handle = NULL;
 
-int selectIPC(void)
+enum ipc_id{
+    sockets,
+    messageQueue
+};
+
+static ipc ipc_list[] = {
+    {sockets, "Sockets", "shared/libipc_sockets.so"},
+    {messageQueue, "Message Queue", "shared/libipc_msgq.so"}
+};
+
+/** @brief Set the shared library according to the received ipc_option (id) */
+int selectIPC(int ipc_option)
 {
+    unsigned int i;
+
+    ipc ipc_selected = {RESULT_FAIL, "", ""};
+
+    for (i=0; i<sizeof(ipc_list); i++) {
+        if (ipc_list[i].id == ipc_option) {
+            ipc_selected = ipc_list[i];
+            break;
+        }
+    }
+
+    if(ipc_selected.id == RESULT_FAIL) {
+        DBG_PRINT("Invalid ipc method\n");
+        return RESULT_FAIL;
+    }
+
+    DBG_PRINT("IPC selected: id=[%d] name=[%s] path=[%s]\n", ipc_selected.id, ipc_selected.name, ipc_selected.path);
     if(handle != NULL)
     {
         DBG_PRINT("Handle already loaded\n");
         return RESULT_SUCCESS;
     }
 
-    DBG_PRINT("Loading IPC SOCKETS handler\n");
-    handle = dlopen(LIBIPC_SOCKETS_PATH, RTLD_NOW | RTLD_GLOBAL);
+    DBG_PRINT("Loading handler\n");
+    handle = dlopen(ipc_selected.path, RTLD_NOW | RTLD_GLOBAL);
 
     if (!handle) {
         DBG_PRINT("%s\n", dlerror());
@@ -37,6 +62,8 @@ int selectIPC(void)
     return RESULT_SUCCESS;
 }
 
+/** @brief Wrapper for server function. Set the correct symbol according to the selected
+ * shared library */
 int server(void)
 {
     if(handle == NULL){
@@ -54,6 +81,9 @@ int server(void)
     return select_server();
 }
 
+/** @brief Wrapper for client function. Set the correct symbol according to the selected
+ * shared library
+*/
 int client(int value)
 {
     if(handle == NULL){

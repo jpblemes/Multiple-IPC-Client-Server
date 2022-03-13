@@ -5,6 +5,7 @@ SHARED_DIR = $(PWD)/shared
 
 #Include libs
 LIBS += libs/libipc_sockets
+LIBS += libs/libipc_msgq
 LIBS += libs/libsensors
 #Include apps
 APPS += apps/testServer
