@@ -19,38 +19,24 @@
 
 #define SOCKET_NAME "/tmp/sensorSocket"
 #define BUFFER_SIZE 128
-#define CMD_SIZE 500
 #define RESULT_SUCCESS  0
 #define RESULT_FAIL    -1
 
 int server(void)
 {
     struct sockaddr_un name;
-    
-#if 0  
-    struct sockaddr_un {
-        sa_family_t sun_family;               /* AF_UNIX */
-        char        sun_path[108];            /* pathname */
-    };
-#endif
 
     int ret;
     int connection_socket;
     int data_socket;
     char buffer[BUFFER_SIZE];
-    char cmd[CMD_SIZE];
 
     DBG_PRINT("Started IPC Socket Server!\n")
 
-    /*In case the program exited inadvertently on the last run,
-     *remove the socket.
-     **/
-
+    /*In case the program exited inadvertently on the last run, remove the socket. **/
     unlink(SOCKET_NAME);
 
     /* Create Master socket. */
-
-    /*SOCK_DGRAM for Datagram based communication*/
     connection_socket = socket(AF_UNIX, SOCK_STREAM, 0);
 
     if (connection_socket == -1) {
@@ -68,10 +54,6 @@ int server(void)
     strncpy(name.sun_path, SOCKET_NAME, sizeof(name.sun_path) - 1);
 
     /* Bind socket to socket name.*/
-    /* Purpose of bind() system call is that application() dictate the underlying 
-     * operating system the criteria of recieving the data. Here, bind() system call
-     * is telling the OS that if sender process sends the data destined to socket "/tmp/DemoSocket", 
-     * then such data needs to be delivered to this server process (the server process)*/
     ret = bind(connection_socket, (const struct sockaddr *) &name,
             sizeof(struct sockaddr_un));
 
@@ -79,21 +61,16 @@ int server(void)
         perror("bind");
         return RESULT_FAIL;
     }
-
     DBG_PRINT("bind() call succeed\n")
-    /*
-     * Prepare for accepting connections. The backlog size is set
-     * to 20. So while one request is being processed other requests
-     * can be waiting.
-     * */
-
+    
+    /* Prepare for accepting connections. The backlog size is setted. */
     ret = listen(connection_socket, 20);
     if (ret == -1) {
         perror("listen");
         return RESULT_FAIL;
     }
 
-    /* This is the main loop for handling connections. */
+    /*loop for handling connections. */
     for (;;) {
 
         /* Wait for incoming connection. */
@@ -111,9 +88,7 @@ int server(void)
         /*Prepare the buffer to recv the data*/
         memset(buffer, 0, BUFFER_SIZE);
 
-        /* Wait for next data packet. */
-        /*Server is blocked here. Waiting for the data to arrive from client
-            * 'read' is a blocking system call*/
+        /* Wait for next data packet. 'read' is a blocking system call*/
         DBG_PRINT("Waiting for data from the client\n")
         ret = read(data_socket, buffer, BUFFER_SIZE);
 
@@ -124,17 +99,6 @@ int server(void)
 
         /* show received value. */
         DBG_PRINT("data received by server: %s\n", buffer)
-
-        DBG_PRINT("Write data on file\n")
-        memset(cmd, 0, CMD_SIZE);
-        snprintf(cmd, sizeof(cmd), "echo %s > data.txt", buffer);
-        ret = system(cmd);
-
-        if(ret != RESULT_SUCCESS)
-        {
-            perror("system");
-            return RESULT_FAIL;
-        }
 
         /* Send ok. */
         memset(buffer, 0, BUFFER_SIZE);
@@ -155,9 +119,7 @@ int server(void)
     close(connection_socket);
     DBG_PRINT("connection closed..\n");
 
-    /* Server should release resources before getting terminated.
-     * Unlink the socket. */
-
+    /* Unlink the socket. */
     unlink(SOCKET_NAME);
     return RESULT_SUCCESS;
 }
@@ -170,7 +132,6 @@ int client (int value)
     char buffer[BUFFER_SIZE];
 
     /* Create data socket. */
-
     data_socket = socket(AF_UNIX, SOCK_STREAM, 0);
 
     if (data_socket == -1) {
@@ -178,16 +139,9 @@ int client (int value)
         return RESULT_FAIL;
     }
 
-    /*
-     * For portability clear the whole structure, since some
-     * implementations have additional (nonstandard) fields in
-     * the structure.
-     * */
-
     memset(&addr, 0, sizeof(struct sockaddr_un));
 
     /* Connect socket to socket address */
-
     addr.sun_family = AF_UNIX;
     strncpy(addr.sun_path, SOCKET_NAME, sizeof(addr.sun_path) - 1);
 
